@@ -5,7 +5,7 @@
 #include <regex>
 #include <vector>
 using namespace std;
-vector<string> parse(string init_state);
-string get_parameter(int n,char* s[]);
-vector<string> parse_entrance(int argv,char* argc[]);
-int manhattan(string estate);
+vector<vector<int>> parse(int n, char *s[]);
+vector<vector<int>> parse_entrance(int argv,char* argc[]);
+int manhattan(vector<int> state);
+bool is_goal(vector<int> state);

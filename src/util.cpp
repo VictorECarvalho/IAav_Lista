@@ -7,43 +7,35 @@
 #include "util.h"
 using namespace std;
 
-vector<string> parse(string init_state)
+vector<vector<int>> parse(int n, char *s[])
 {
-
-    regex rgx(",");
-    vector<string> vec;
-    sregex_token_iterator iter(init_state.begin(),
-                               init_state.end(),
-                               rgx,
-                               -1);
-    sregex_token_iterator end;
-    int l = 0;
-    for (; iter != end; ++iter)
-    {
-        vec.push_back(*iter);
-        l++;
-    }
-    return vec;
-}
-string get_parameter(int n, char *s[])
-{
-    string new_s;
+    vector<vector<int>> vec;
+    int k =0;
     int i = 2;
-    while (i < n)
-    {
-        new_s = new_s + s[i];
-        i++;
+    vec.push_back(vector<int>());
+    for(i=2; i<n;i++){
+        string input = s[i];
+        size_t pos = input.find(',') ;
+        if(pos != string::npos){
+            input.erase(pos, 1);
+            vec[k].push_back(stoi(input));
+            vec.push_back(vector<int>());
+            k++;
+        }
+        else{
+            vec[k].push_back(stoi(input));
+        }
     }
-    return new_s;
+    return vec;
 }
-vector<string> parse_entrance(int argv, char *argc[])
+vector<vector<int>> parse_entrance(int argv, char *argc[])
 {
-    vector<string> vec;
-    vec = parse(get_parameter(argv, argc));
+    vector<vector<int>> vec;
+    vec = parse(argv, argc);
     return vec;
 }
 
-int manhattan(string estate)
+int manhattan(vector<int> estate)
 {
     int distance = 0;
     vector<int> goal = {0, 1, 2, 3, 4, 5, 6, 7, 8};
@@ -75,4 +67,12 @@ int manhattan(string estate)
     }
 
     return distance;
+}
+bool is_goal(vector<int> state){
+    for(int i = 0; i < state.size() - 1; i++){
+        if(state[i] > state[i+1]){
+            return false;
+        }
+    }
+    return true;
 }
