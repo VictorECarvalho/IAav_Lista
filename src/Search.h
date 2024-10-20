@@ -12,4 +12,7 @@ class Search {
         Search(){
             algorithm = "";
         }
+        Search(string alg){
+            algorithm = alg;
+        }
 };

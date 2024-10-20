@@ -4,8 +4,8 @@
 all: main 
  
  
-main: src/lista1.cpp src/Search.h src/Search.cpp
-	g++ -o main src/lista1.cpp src/Search.h src/Search.cpp src/Estate.h src/Estate.cpp
+main: src/lista1.cpp src/Search.cpp src/util.cpp
+	g++ -o main src/lista1.cpp  src/Search.cpp  src/Estate.cpp src/util.cpp 
 
 clean: 
 	rm main 
