@@ -46,7 +46,7 @@ vector<string> parse_entrance(int argv, char *argc[])
 int manhattan(string estate)
 {
     int distance = 0;
-    vector<int> goal = {1, 2, 3, 4, 5, 6, 7, 8, 0};
+    vector<int> goal = {0, 1, 2, 3, 4, 5, 6, 7, 8};
     int estate_int[estate.size()];
 
     for (int i = 0; i < estate.size(); i++)
