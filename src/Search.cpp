@@ -20,14 +20,42 @@ void Search::start_search(vector<int> init_state){
 }
 void Search::bfs_search(vector<int> state){
     State init_state(state);
+    int w =0;
     this->open.push_back(init_state);
     while(!open.empty()){
-        State opened = this->open.front();
-        this->open.pop_front();
+        int l=0;
+        State opened = this->open.back();
+        this->closed.insert(opened.state);
+        this->open.pop_back();
+        l++;
+
         if(is_goal(opened.state)){
-            cout << "achei :)" << endl;
+            cout << open.size() + closed.size() << endl;
+            return;
         }
-        open.splice(open.end(), opened.succ());
+        open.splice(open.end(), opened.succ()); 
+        /*
+        if(w < 10){
+            cout << open.size() << endl;
+        w++;
+            //w = 0;
+        }
+        cout << "opened" << endl;
+            cout << "state: ";
+        for(auto i : opened.state){
+            cout << i << " ";
+            
+        }
+            cout << endl;
+        cout << "open" << endl;
+        for(auto i : open){
+            cout << "state: " << i.action << "- ";
+            for(auto j : i.state){
+                cout << j << " ";
+            }
+            cout << endl;
+        }
+        //*/
     }
     return;
 }

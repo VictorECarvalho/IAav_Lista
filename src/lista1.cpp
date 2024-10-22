@@ -14,7 +14,7 @@ int main(int argc, char* argv[])
     Search search(argv[1]);
     vector<vector<int>> init_estates; 
     init_estates = parse_entrance(argc, argv); 
-    for(size_t i = 0; i <init_estates.size(); i++){
+    for(size_t i = 1; i <init_estates.size(); i++){
         search.start_search(init_estates[i]);
     }
     

@@ -4,7 +4,7 @@
 all: main 
  
  
-main: src/lista1.cpp src/Search.cpp src/util.cpp
+main: src/lista1.cpp src/Search.cpp src/util.cpp src/State.cpp
 	g++ -o main src/lista1.cpp  src/Search.cpp  src/State.cpp src/util.cpp 
 
 clean: 

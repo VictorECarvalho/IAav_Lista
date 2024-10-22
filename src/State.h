@@ -40,6 +40,5 @@ class State {
 
         };
         list<State> succ();
-        State make_succ(actions action);
         
 };
