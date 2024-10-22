@@ -4,7 +4,9 @@
 #include <unordered_set>
 #include <vector>
 #include "State.h"
+#include "util.h"
 #include <functional> // For hash
+#include <queue>
 
 using namespace std;
 // Custom hash function for vector<int>
@@ -18,11 +20,20 @@ struct VectorHash {
     }
 };
 
+struct astarFunct 
+{
+    bool operator()(const State& s1, const State& s2) 
+    {
+        return (s1.cost + manhattan(s1.state)) > (s2.cost + manhattan(s2.state));
+    }
+};
+
 class Search {
     public:     
         string algorithm;
         list<State> open;
         unordered_set<vector<int>, VectorHash> closed;  
+        priority_queue<State, vector<State>, astarFunct> openAstar;
         Search(){
             algorithm = "";
         }
@@ -31,4 +42,5 @@ class Search {
         }
         void start_search(vector<int> state);
         void bfs_search(vector<int> state);
+        void astar_search(vector<int> init_state) ;
 };

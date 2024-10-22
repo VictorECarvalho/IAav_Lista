@@ -18,5 +18,6 @@ int main(int argc, char* argv[])
         search.start_search(init_estates[i]);
     }
     
+    
     return 0;
 }

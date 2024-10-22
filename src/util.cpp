@@ -74,7 +74,7 @@ bool is_goal(vector<int> state){
         return true;
     }
     for(int i = 0; i < state.size() - 1; i++){
-        if(state[i] > state[i+1]){
+        if(state[i] = state[i+1]){
             return false;
         }
     }
