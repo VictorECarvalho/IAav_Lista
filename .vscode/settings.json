@@ -53,6 +53,7 @@
         "map": "cpp",
         "set": "cpp",
         "unordered_set": "cpp",
-        "sstream": "cpp"
+        "sstream": "cpp",
+        "chrono": "cpp"
     }
 }

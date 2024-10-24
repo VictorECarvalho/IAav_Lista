@@ -18,6 +18,7 @@ class State {
         int n;
         int cost;
         actions action;
+        static int sum_h;
         State(){
 
         };

@@ -23,24 +23,35 @@ void Search::start_search(vector<int> init_state){
 }
 void Search::bfs_search(vector<int> state){
     State init_state(state);
+    chrono::steady_clock::time_point begin = chrono::steady_clock::now();
+    if(is_goal(init_state.state)){
+        chrono::steady_clock::time_point end = chrono::steady_clock::now();
+        print_search(init_state, begin, end, init_state);
+        clear_search();
+        return;
+    }
     int w =0;
     this->open.push_back(init_state);
     while(!open.empty()){
-        int l=0;
-        State opened = this->open.back();
+        State opened = this->open.front();
         this->closed.insert(opened.state);
-        this->open.pop_back();
-        l++;
+        this->open.pop_front();
 
         if(is_goal(opened.state)){
-            cout << open.size() + closed.size() << endl;
+            chrono::steady_clock::time_point end = chrono::steady_clock::now();
+            print_search(init_state, begin, end, opened);
+            clear_search();
             return;
         }
-        open.splice(open.end(), opened.succ()); 
+        for (State &next_state : opened.succ())
+        {
+            if (this->closed.find(next_state.state) != this->closed.end())
+                continue;
+            this->open.push_back(next_state);
+        }
         /*
         if(w < 10){
-            cout << open.size() << endl;
-        w++;
+            w++;
             //w = 0;
         }
         cout << "opened" << endl;
@@ -97,4 +108,19 @@ void Search::astar_search(vector<int> init_state)
     }
 
     cout << "No solution" << endl;
+}
+
+void Search::clear_search(){
+    this->open.clear();
+    this->closed.clear();
+    this->openAstar = priority_queue<State, vector<State>, astarFunct>();
+    return;
+}
+void Search::print_search(State init_state, chrono::steady_clock::time_point begin, chrono::steady_clock::time_point end, State final_state){
+    cout << this->open.size() + this->closed.size() << ",";
+    cout << final_state.cost << ",";
+    cout << chrono::duration_cast<chrono::milliseconds>(end - begin).count() << ",";
+    cout << "0" << ",";
+    cout << manhattan(init_state.state) << endl;
+    return;
 }
