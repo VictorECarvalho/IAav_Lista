@@ -4,6 +4,7 @@
 #include <unordered_set>
 #include <vector>
 #include <chrono>
+#include <utility>
 #include "State.h"
 #include "util.h"
 #include <functional> // For hash
@@ -43,7 +44,12 @@ class Search {
         }
         void start_search(vector<int> state);
         void bfs_search(vector<int> state);
-        void astar_search(vector<int> init_state) ;
+        void astar_search(vector<int> init_state);
+        void idastar_search(vector<int> init_state);
+        void gbfs_search(vector<int> init_state);
+        void idfs_search(vector<int> init_state);
         void clear_search();
         void print_search(State init_state, chrono::steady_clock::time_point begin, chrono::steady_clock::time_point end, State final_state);
+        tuple<int, State> rec_search(State state, int limit);
+        State depth_limit_search(State state, int limit);
 };

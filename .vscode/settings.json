@@ -54,6 +54,7 @@
         "set": "cpp",
         "unordered_set": "cpp",
         "sstream": "cpp",
-        "chrono": "cpp"
+        "chrono": "cpp",
+        "optional": "cpp"
     }
 }

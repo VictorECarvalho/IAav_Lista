@@ -20,7 +20,7 @@ class State {
         actions action;
         static int sum_h;
         State(){
-
+            this->cost = -1;
         };
         State(vector<int> init_estate){
             this->n = init_estate.size();

@@ -3,6 +3,7 @@
 #include <string>
 #include <list>
 #include <cmath>
+#include "util.h"
 using namespace std;
 
 list<State> State::succ(){
@@ -67,3 +68,4 @@ list<State> State::succ(){
    cout << "end succ_list" << endl; //*/
     return succ_list;
 }
+
