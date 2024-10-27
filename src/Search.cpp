@@ -81,7 +81,8 @@ void Search::bfs_search(vector<int> state){
 
 void Search::astar_search(vector<int> init_state)
 {
-    this->openAstar.push(State(init_state, NONE, 0));
+    State initial_state(init_state, NONE, 0);
+    this->openAstar.push(initial_state);
 
     int node_n = 0;
 
@@ -89,32 +90,33 @@ void Search::astar_search(vector<int> init_state)
     while (!this->openAstar.empty())
     {
         State current = this->openAstar.top();
+        node_n++;
         this->openAstar.pop();
+        
 
         if (is_goal(current.state))
         {
             chrono::steady_clock::time_point end = chrono::steady_clock::now();
-            cout << "Time elapsed = " << chrono::duration_cast<chrono::milliseconds>(end - begin).count() << "ms" << endl;
+            
+            this->closed.insert(current.state);
 
-            cout << "Goal cost: " << current.cost << endl;
             print_search(State(init_state), begin, end, current);
 
+            this->clear_search();
             return;
         }
 
         this->closed.insert(current.state);
 
-        for (State &next_state : current.succ())
+        for (State& next_state : current.succ())
         {
-            if (this->closed.find(next_state.state) != this->closed.end())
-                continue;
-                
             this->openAstar.push(next_state);
         }
     }
 
     cout << "No solution" << endl;
 }
+
 void Search::idastar_search(vector<int> init_state){
     State init(init_state);
     int limit = manhattan(init.state);
