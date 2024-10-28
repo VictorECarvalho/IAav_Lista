@@ -8,7 +8,9 @@
 #include "Search.h"
 #include "util.h"
 #include <iostream>
+#include <limits>
 using namespace std;
+float inf = numeric_limits<float>::infinity();
 void Search::start_search(vector<int> init_state){
     if (this->algorithm == "-bfs") {
         cout << "-bfs" << endl;
@@ -41,7 +43,7 @@ void Search::bfs_search(vector<int> state){
         State opened = this->open.front();
         this->open.pop_front();
 
-        for (State &next_state : opened.succ())
+        for (State &next_state : opened.succ().reverse())
             {
             if(is_goal(next_state.state)){
                 chrono::steady_clock::time_point end = chrono::steady_clock::now();
@@ -119,9 +121,9 @@ void Search::astar_search(vector<int> init_state)
 
 void Search::idastar_search(vector<int> init_state){
     State init(init_state);
-    int limit = manhattan(init.state);
+    float limit = manhattan(init.state);
     chrono::steady_clock::time_point begin = chrono::steady_clock::now();
-    while(limit != -1){
+    while(limit != inf){
         auto result = rec_search(init, limit);
         limit = get<0>(result);
         if(get<1>(result).cost != -1){
@@ -132,16 +134,23 @@ void Search::idastar_search(vector<int> init_state){
         }
     }
 }
-tuple<int, State> Search::rec_search(State state, int limit){
-    if(manhattan(state.state) > limit){
-        return make_tuple(manhattan(state.state), State());
+tuple<float, State> Search::rec_search(State state, float limit){
+    this->closed.insert(state.state);
+    if(state.cost > limit){
+        return make_tuple(state.cost, State());
     }
     if(is_goal(state.state)){
         return make_tuple(0, state);
     }
-    int next_limit = -1;
+    float next_limit = inf;
     for(State &next_state : state.succ()){
-        optional result = rec_search(next_state, limit);
+        if(manhattan(next_state.state) < inf){            
+            auto result = rec_search(next_state, limit);
+            if(get<1>(result).cost != -1){
+                return make_tuple(0, get<1>(result));
+            }
+            next_limit = min(get<0>(result), next_limit);
+        }
         
     }
     return make_tuple(next_limit, State());
@@ -150,7 +159,7 @@ void Search::gbfs_search(vector<int> init_state){
     return;
 }
 void Search::idfs_search(vector<int> init_state){
-    int limit = 0;
+    float limit = 0;
     State init(init_state);
     chrono::steady_clock::time_point begin = chrono::steady_clock::now();
     while(limit != -1){

@@ -54,6 +54,6 @@ class Search {
         void idfs_search(vector<int> init_state);
         void clear_search();
         void print_search(State init_state, chrono::steady_clock::time_point begin, chrono::steady_clock::time_point end, State final_state);
-        tuple<int, State> rec_search(State state, int limit);
+        tuple<float, State> rec_search(State state, float limit);
         State depth_limit_search(State state, int limit);
 };
