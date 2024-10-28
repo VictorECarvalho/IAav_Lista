@@ -30,7 +30,19 @@ struct astarFunct
             return (s1.cost + manhattan(s1.state)) > (s2.cost + manhattan(s2.state));
         if (manhattan(s1.state) != manhattan(s2.state))
             return manhattan(s1.state) > manhattan(s2.state);
-        return s1.sequence > s2.sequence;
+        return s1.sequence < s2.sequence;
+    }
+};
+
+struct gbfsFunct 
+{
+    bool operator()(const State& s1, const State& s2) 
+    {
+        if (manhattan(s1.state) != manhattan(s2.state))
+            return (manhattan(s1.state)) > (manhattan(s2.state));
+        if (s1.cost != s2.cost)
+            return s1.cost > s2.cost;
+        return s1.sequence < s2.sequence;
     }
 };
 
@@ -43,6 +55,7 @@ class Search {
         list<State> open;
         unordered_set<vector<int>, VectorHash> closed;  
         priority_queue<State, vector<State>, astarFunct> openAstar;
+        priority_queue<State, vector<State>, gbfsFunct> openGbfs;
         Search(){
             algorithm = "";
         }
@@ -56,7 +69,7 @@ class Search {
         void gbfs_search(vector<int> init_state);
         void idfs_search(vector<int> init_state);
         void clear_search();
-        void print_search(State init_state, chrono::steady_clock::time_point begin, chrono::steady_clock::time_point end, State final_state);
-        tuple<float, State> rec_search(State state, float limit);
+        void print_search(State init_state, chrono::steady_clock::time_point begin, chrono::steady_clock::time_point end, State final_state, float avr);
+        tuple<int, State> rec_search(State state, int limit);
         State depth_limit_search(State state, int limit);
 };
