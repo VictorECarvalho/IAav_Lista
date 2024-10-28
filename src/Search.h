@@ -52,9 +52,6 @@ class Search {
         list<State> open;
         unordered_set<vector<int>, VectorHash> closed;  
         priority_queue<State, vector<State>, astarFunct> openAstar;
-        list<State> open;
-        unordered_set<vector<int>, VectorHash> closed;  
-        priority_queue<State, vector<State>, astarFunct> openAstar;
         priority_queue<State, vector<State>, gbfsFunct> openGbfs;
         Search(){
             algorithm = "";
@@ -70,6 +67,6 @@ class Search {
         void idfs_search(vector<int> init_state);
         void clear_search();
         void print_search(State init_state, chrono::steady_clock::time_point begin, chrono::steady_clock::time_point end, State final_state, float avr);
-        tuple<int, State> rec_search(State state, int limit);
+        tuple<float, State> rec_search(State state, float limit);
         State depth_limit_search(State state, int limit);
 };
