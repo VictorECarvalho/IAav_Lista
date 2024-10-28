@@ -81,23 +81,23 @@ void Search::bfs_search(vector<int> state){
 
 void Search::astar_search(vector<int> init_state)
 {
+    int sequence = 0;
     State initial_state(init_state, NONE, 0);
+    initial_state.sequence = sequence;
     this->openAstar.push(initial_state);
 
-    int node_n = 0;
 
     chrono::steady_clock::time_point begin = chrono::steady_clock::now();
     while (!this->openAstar.empty())
     {
         State current = this->openAstar.top();
-        node_n++;
         this->openAstar.pop();
         
 
         if (is_goal(current.state))
         {
             chrono::steady_clock::time_point end = chrono::steady_clock::now();
-            
+
             this->closed.insert(current.state);
 
             print_search(State(init_state), begin, end, current);
@@ -110,6 +110,8 @@ void Search::astar_search(vector<int> init_state)
 
         for (State& next_state : current.succ())
         {
+            sequence++;
+            next_state.sequence = sequence;
             this->openAstar.push(next_state);
         }
     }
@@ -146,6 +148,7 @@ tuple<int, State> Search::rec_search(State state, int limit){
     }
     return make_tuple(next_limit, State());
 }
+
 void Search::gbfs_search(vector<int> init_state){
     return;
 }
