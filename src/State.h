@@ -28,20 +28,17 @@ class State {
             this->state = init_estate;
             this->cost = 0;
             this->action = NONE;
-            this->sequence = sequence++; 
         };
         State(const State& other){
             this->state = other.state;
             this->cost = other.cost;
             this->action = other.action;
             this->n = other.n;
-            this->sequence = sequence++;
         };
         State(vector<int> state, actions action, int cost){
             this->state = state;
             this->cost = cost;
             this->action = action;
-            this->sequence = sequence++;
 
         };
         list<State> succ();

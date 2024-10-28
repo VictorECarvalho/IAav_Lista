@@ -42,8 +42,9 @@ void Search::bfs_search(vector<int> state){
     while(!open.empty()){
         State opened = this->open.front();
         this->open.pop_front();
-
-        for (State &next_state : opened.succ().reverse())
+        list<State> succ = opened.succ();
+        //succ.reverse();
+        for (State &next_state : succ)
             {
             if(is_goal(next_state.state)){
                 chrono::steady_clock::time_point end = chrono::steady_clock::now();
@@ -83,23 +84,23 @@ void Search::bfs_search(vector<int> state){
 
 void Search::astar_search(vector<int> init_state)
 {
+    int sequence = 0;
     State initial_state(init_state, NONE, 0);
+    initial_state.sequence = sequence;
     this->openAstar.push(initial_state);
 
-    int node_n = 0;
 
     chrono::steady_clock::time_point begin = chrono::steady_clock::now();
     while (!this->openAstar.empty())
     {
         State current = this->openAstar.top();
-        node_n++;
         this->openAstar.pop();
         
 
         if (is_goal(current.state))
         {
             chrono::steady_clock::time_point end = chrono::steady_clock::now();
-            
+
             this->closed.insert(current.state);
 
             print_search(State(init_state), begin, end, current);
@@ -112,6 +113,8 @@ void Search::astar_search(vector<int> init_state)
 
         for (State& next_state : current.succ())
         {
+            sequence++;
+            next_state.sequence = sequence;
             this->openAstar.push(next_state);
         }
     }
@@ -143,7 +146,9 @@ tuple<float, State> Search::rec_search(State state, float limit){
         return make_tuple(0, state);
     }
     float next_limit = inf;
-    for(State &next_state : state.succ()){
+    list<State> succ = state.succ();
+    succ.reverse();    
+    for(State &next_state : succ){
         if(manhattan(next_state.state) < inf){            
             auto result = rec_search(next_state, limit);
             if(get<1>(result).cost != -1){
@@ -182,8 +187,10 @@ State Search::depth_limit_search(State init_state, int limit){
     if(is_goal(init_state.state)){
         return init_state;
     }
-    if(limit > 0){        
-        for(State &next_state : init_state.succ()){
+    if(limit > 0){     
+        list<State> succ = init_state.succ();
+        succ.reverse();   
+        for(State &next_state : succ){
             State result = depth_limit_search(next_state, limit - 1);
             if(result.cost != -1){                
                 return result;

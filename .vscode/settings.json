@@ -56,5 +56,15 @@
         "sstream": "cpp",
         "chrono": "cpp",
         "optional": "cpp"
+        "regex": "cpp",
+        "bitset": "cpp",
+        "cstring": "cpp",
+        "ctime": "cpp",
+        "map": "cpp",
+        "set": "cpp",
+        "unordered_set": "cpp",
+        "sstream": "cpp",
+        "chrono": "cpp",
+        "optional": "cpp"
     }
 }

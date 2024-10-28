@@ -40,6 +40,9 @@ class Search {
         list<State> open;
         unordered_set<vector<int>, VectorHash> closed;  
         priority_queue<State, vector<State>, astarFunct> openAstar;
+        list<State> open;
+        unordered_set<vector<int>, VectorHash> closed;  
+        priority_queue<State, vector<State>, astarFunct> openAstar;
         Search(){
             algorithm = "";
         }
