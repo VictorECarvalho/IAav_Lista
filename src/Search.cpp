@@ -5,6 +5,7 @@
 #include <chrono>
 #include <utility>
 #include <optional>
+#include <iomanip> 
 #include "Search.h"
 #include "util.h"
 #include <iostream>
@@ -23,6 +24,8 @@ void Search::start_search(vector<int> init_state){
         cout << "-idastar" << endl;
         idastar_search(init_state);
     } else if (this->algorithm == "-gbfs") {
+        cout << "-gbfs" << endl;
+        gbfs_search(init_state);
     } 
     return;
 }
@@ -31,7 +34,7 @@ void Search::bfs_search(vector<int> state){
     chrono::steady_clock::time_point begin = chrono::steady_clock::now();
     if(is_goal(init_state.state)){
         chrono::steady_clock::time_point end = chrono::steady_clock::now();
-        print_search(init_state, begin, end, init_state);
+        print_search(init_state, begin, end, init_state, 0);
         clear_search();
         return;
     }
@@ -45,7 +48,7 @@ void Search::bfs_search(vector<int> state){
             {
             if(is_goal(next_state.state)){
                 chrono::steady_clock::time_point end = chrono::steady_clock::now();
-                print_search(init_state, begin, end, next_state);
+                print_search(init_state, begin, end, next_state, 0);
                 clear_search();
                 return;
             }
@@ -85,6 +88,7 @@ void Search::astar_search(vector<int> init_state)
     State initial_state(init_state, NONE, 0);
     initial_state.sequence = sequence;
     this->openAstar.push(initial_state);
+    float sum = 0;
 
 
     chrono::steady_clock::time_point begin = chrono::steady_clock::now();
@@ -100,12 +104,13 @@ void Search::astar_search(vector<int> init_state)
 
             this->closed.insert(current.state);
 
-            print_search(State(init_state), begin, end, current);
+            print_search(State(init_state), begin, end, current, sum/sequence);
 
             this->clear_search();
             return;
         }
 
+        sum = sum + sequence;
         this->closed.insert(current.state);
 
         for (State& next_state : current.succ())
@@ -128,7 +133,7 @@ void Search::idastar_search(vector<int> init_state){
         limit = get<0>(result);
         if(get<1>(result).cost != -1){
             chrono::steady_clock::time_point end = chrono::steady_clock::now();
-            print_search(init, begin, end, get<1>(result));
+            print_search(init, begin, end, get<1>(result), 0);
             clear_search();
             return;
         }
@@ -150,8 +155,47 @@ tuple<int, State> Search::rec_search(State state, int limit){
 }
 
 void Search::gbfs_search(vector<int> init_state){
+    int sequence = 0;
+    State initial_state(init_state, NONE, 0);
+    initial_state.sequence = sequence;
+    this->openGbfs.push(initial_state);
+    float sum = 0;
+
+    chrono::steady_clock::time_point begin = chrono::steady_clock::now();
+    while (!this->openGbfs.empty())
+    {
+        State current = this->openGbfs.top();
+        this->openGbfs.pop();
+
+        if (is_goal(current.state))
+        {
+            chrono::steady_clock::time_point end = chrono::steady_clock::now();
+            this->closed.insert(current.state);
+            print_search(State(init_state), begin, end, current, sum/sequence);
+            this->clear_search();
+            return;
+        }
+
+        sum = sum + manhattan(current.state);
+        this->closed.insert(current.state);
+
+        for (State& next_state : current.succ())
+        {
+            if (closed.find(next_state.state) != closed.end()) 
+                continue;
+
+            sequence++;
+            next_state.sequence = sequence;
+            //cout << sequence << endl;
+            this->openGbfs.push(next_state);
+        }
+    }
+
+    cout << "No solution" << endl;
     return;
 }
+
+
 void Search::idfs_search(vector<int> init_state){
     int limit = 0;
     State init(init_state);
@@ -160,7 +204,7 @@ void Search::idfs_search(vector<int> init_state){
         State result = depth_limit_search(init, limit);
         if(result.cost != -1){
             chrono::steady_clock::time_point end = chrono::steady_clock::now();
-            print_search(State(init_state), begin, end, result);
+            print_search(State(init_state), begin, end, result,0);
             clear_search();
             return;
         }
@@ -198,16 +242,19 @@ void Search::clear_search(){
     this->open.clear();
     this->closed.clear();
     this->openAstar = priority_queue<State, vector<State>, astarFunct>();
+    this->openGbfs = priority_queue<State, vector<State>, gbfsFunct>();
     return;
 }
-void Search::print_search(State init_state, chrono::steady_clock::time_point begin, chrono::steady_clock::time_point end, State final_state){
+void Search::print_search(State init_state, chrono::steady_clock::time_point begin, chrono::steady_clock::time_point end, State final_state,float avr){
     //expanded nodes
     cout <<  this->closed.size() << ",";
-    cout << this->open.size() << ",";
-    cout << this->open.size() + this->closed.size() << ",";
+    //cout << this->open.size() << ",";
+    //cout << this->open.size() + this->closed.size() << ",";
     cout << final_state.cost << ",";
-    cout << chrono::duration_cast<chrono::milliseconds>(end - begin).count() << ",";
-    cout << "0" << ",";
+    double time = chrono::duration_cast<chrono::milliseconds>(end - begin).count();
+    time = time/100000;
+    cout << fixed << setprecision(6) << time << ",";
+    cout << avr << ",";
     cout << manhattan(init_state.state) << endl;
     return;
 }
