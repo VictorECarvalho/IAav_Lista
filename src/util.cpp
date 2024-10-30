@@ -57,12 +57,8 @@ int manhattan(vector<int> estate)
     return distance;
 }
 bool is_goal(vector<int> state){
-    vector<int> goal = {0, 1, 2, 3, 4, 5, 6, 7, 8};
-    if(state == goal){
-        return true;
-    }
     for(int i = 0; i < state.size() - 1; i++){
-        if(state[i] = state[i+1]){
+        if(state[i] > state[i+1]){
             return false;
         }
     }

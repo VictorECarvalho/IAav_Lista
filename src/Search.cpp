@@ -43,6 +43,7 @@ void Search::bfs_search(vector<int> state){
     int w =0;
     this->open.push_back(init_state);
     while(!open.empty()){
+        this->expanded++;
         State opened = this->open.front();
         this->open.pop_front();
         list<State> succ = opened.succ();
@@ -57,7 +58,7 @@ void Search::bfs_search(vector<int> state){
             }
             if (this->closed.find(next_state.state) == this->closed.end()){
                     this->open.push_back(next_state);
-                    this->closed.insert(opened.state);
+                    this->closed.insert(next_state.state);
             }
         }
         /*
@@ -99,6 +100,7 @@ void Search::astar_search(vector<int> init_state)
     {
         State current = this->openAstar.top();
         this->openAstar.pop();
+        this->expanded++;
         
 
         if (is_goal(current.state))
@@ -140,10 +142,10 @@ void Search::idastar_search(vector<int> init_state){
             clear_search();
             return;
         }
+        clear_search();
     }
 }
 tuple<float, State> Search::rec_search(State state, float limit){
-    this->closed.insert(state.state);
     if(state.cost > limit){
         return make_tuple(state.cost, State());
     }
@@ -177,6 +179,7 @@ void Search::gbfs_search(vector<int> init_state){
     {
         State current = this->openGbfs.top();
         this->openGbfs.pop();
+        this->expanded++;
 
         if (is_goal(current.state))
         {
@@ -225,9 +228,6 @@ void Search::idfs_search(vector<int> init_state){
 }
 State Search::depth_limit_search(State init_state, int limit){
     closed.insert(init_state.state);
-    if(limit < 0){
-        return State();
-    }
     if(is_goal(init_state.state)){
         return init_state;
     }
@@ -236,6 +236,7 @@ State Search::depth_limit_search(State init_state, int limit){
         succ.reverse();   
         for(State &next_state : succ){
             State result = depth_limit_search(next_state, limit - 1);
+            this->expanded++;
             if(result.cost != -1){                
                 return result;
             }
@@ -256,13 +257,13 @@ void Search::clear_search(){
     this->closed.clear();
     this->openAstar = priority_queue<State, vector<State>, astarFunct>();
     this->openGbfs = priority_queue<State, vector<State>, gbfsFunct>();
+    this->expanded = 0;
     return;
 }
 void Search::print_search(State init_state, chrono::steady_clock::time_point begin, chrono::steady_clock::time_point end, State final_state,float avr){
     //expanded nodes
-    cout <<  this->closed.size() << ",";
-    //cout << this->open.size() << ",";
-    //cout << this->open.size() + this->closed.size() << ",";
+    //cout <<  this->closed.size() << ",";
+    cout << this->expanded << ",";
     cout << final_state.cost << ",";
     double time = chrono::duration_cast<chrono::milliseconds>(end - begin).count();
     time = time/100000;
@@ -271,3 +272,4 @@ void Search::print_search(State init_state, chrono::steady_clock::time_point beg
     cout << manhattan(init_state.state) << endl;
     return;
 }
+

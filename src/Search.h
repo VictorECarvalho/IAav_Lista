@@ -50,6 +50,7 @@ class Search {
     public:     
         string algorithm;
         list<State> open;
+        int expanded = 0;
         unordered_set<vector<int>, VectorHash> closed;  
         priority_queue<State, vector<State>, astarFunct> openAstar;
         priority_queue<State, vector<State>, gbfsFunct> openGbfs;

@@ -52,7 +52,7 @@ list<State> State::succ(){
             succ_list.push_back(new_state);
         }
     } 
-    /*
+   /*
     cout << "state in: "<<"i: " << i<< " d: "<< d << endl;
     for(auto i : this->state){
         cout << i << " ";
