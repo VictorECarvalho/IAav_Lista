@@ -227,16 +227,15 @@ void Search::idfs_search(vector<int> init_state){
     return;
 }
 State Search::depth_limit_search(State init_state, int limit){
-    closed.insert(init_state.state);
     if(is_goal(init_state.state)){
         return init_state;
     }
     if(limit > 0){     
+        this->expanded++;
         list<State> succ = init_state.succ();
-        succ.reverse();   
+        //succ.reverse();   
         for(State &next_state : succ){
             State result = depth_limit_search(next_state, limit - 1);
-            this->expanded++;
             if(result.cost != -1){                
                 return result;
             }
