@@ -54,6 +54,7 @@ class Search {
         unordered_set<vector<int>, VectorHash> closed;  
         priority_queue<State, vector<State>, astarFunct> openAstar;
         priority_queue<State, vector<State>, gbfsFunct> openGbfs;
+        
         Search(){
             algorithm = "";
         }

@@ -142,19 +142,19 @@ void Search::idastar_search(vector<int> init_state){
             clear_search();
             return;
         }
-        clear_search();
     }
 }
 tuple<float, State> Search::rec_search(State state, float limit){
-    if(state.cost > limit){
-        return make_tuple(state.cost, State());
+    if(state.idastar_f() > limit){
+        return make_tuple(state.idastar_f(), State());
     }
     if(is_goal(state.state)){
         return make_tuple(0, state);
     }
     float next_limit = inf;
     list<State> succ = state.succ();
-    succ.reverse();    
+    this->expanded++;
+    //succ.reverse();    
     for(State &next_state : succ){
         if(manhattan(next_state.state) < inf){            
             auto result = rec_search(next_state, limit);

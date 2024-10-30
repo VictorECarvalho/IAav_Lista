@@ -15,7 +15,7 @@ list<State> State::succ(){
             break;
             }
     }
-    int d = sqrt(this->state.size());   
+    int d = sqrt(this->n);  
     if (this->action != BAIXO) {
         if(i/d >= 1){
             vector<int> temp = this->state;
@@ -67,5 +67,9 @@ list<State> State::succ(){
     }
    cout << "end succ_list" << endl; //*/
     return succ_list;
+}
+
+float State::idastar_f(){
+    return this->cost + manhattan(this->state);    
 }
 

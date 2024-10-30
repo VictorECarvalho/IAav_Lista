@@ -39,8 +39,10 @@ class State {
             this->state = state;
             this->cost = cost;
             this->action = action;
+            this->n = state.size();
 
         };
         list<State> succ();
+        float idastar_f();
         
 };
