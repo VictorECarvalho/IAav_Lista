@@ -64,3 +64,59 @@ bool is_goal(vector<int> state){
     }
     return true;
 }
+
+bool is_goal_15(uint64_t state) {
+
+    for (int i = 0; i < 16; ++i) {
+        int tile = (state >> (4 * (15 - i))) & 0xF;
+        if (tile != i) {
+            return false; 
+        }
+    }
+    return true;
+}
+
+
+uint64_t pack15Puzzle(const std::vector<int> &puzzle)
+{
+    uint64_t packedNumber = 0;
+    for (size_t i = 0; i < puzzle.size(); i++)
+        packedNumber |= (uint64_t(puzzle[i]) & 0xF) << (i * 4);
+    return packedNumber;
+}
+
+std::vector<int> unpack15Puzzle(uint64_t packedNumber)
+{
+    std::vector<int> puzzle(16);
+    for (size_t i = 0; i < 16; i++)
+        puzzle[i] = (packedNumber >> (i * 4)) & 0xF;
+    return puzzle;
+}
+
+int getTile(uint64_t state, int pos) {
+    return (state >> (pos * 4)) & 0xF; 
+}
+
+int manhattan_15(uint64_t packed_state) {
+    int distance = 0;
+    int n = 4; 
+
+    int current_col, current_row, goal_row, goal_col;
+
+    for (int i = 0; i < 16; i++) {
+
+        int tile = getTile(packed_state, i);
+
+        if (tile != 0) {  
+            int current_pos = i;
+            int goal_pos = tile;
+            current_row = current_pos / n;
+            current_col = current_pos % n;
+            goal_row = goal_pos / n;
+            goal_col = goal_pos % n;
+            distance += abs(current_row - goal_row) + abs(current_col - goal_col);
+        }
+    }
+
+    return distance;
+}

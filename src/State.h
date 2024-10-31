@@ -16,12 +16,12 @@ enum actions{
 class State {
     public:     
         vector<int> state;
+        uint64_t packed_state;
         int n;
         int cost;
         actions action;
         float h;
-        static long double sum_h;
-        static long int expanded;
+        static int sum_h;
         int sequence = 0;
         State(){
             this->cost = -1;
@@ -32,8 +32,6 @@ class State {
             this->action = NONE;
             this->n = init_estate.size();
             this->h = manhattan(init_estate);
-            //sum_h = sum_h + this->h;
-            //expanded++;
         };
         State(const State& other){
             this->state = other.state;
@@ -41,19 +39,24 @@ class State {
             this->action = other.action;
             this->n = other.n;
             this->h = other.h;
-            //sum_h = sum_h + this->h;
-            //expanded++;
         };
-        State(vector<int> state, actions action, int cost){
+        State(vector<int> state, actions action, int cost)
+        {
             this->state = state;
             this->cost = cost;
             this->action = action;
             this->n = state.size();
             this->h = manhattan(state);
-            //sum_h = sum_h + this->h;
-            //expanded++;
+        };
+        State(uint64_t packed_state, actions action, int cost)
+        {
+            this->packed_state = packed_state;
+            this->action = action;
+            this->cost = cost;
         };
         list<State> succ();
+        list<State> succ_15();
         float idastar_f();
-        
+        int getTile(uint64_t state, int pos) const;
+        uint64_t setTile(uint64_t state, int pos, int value) const;
 };
