@@ -5,6 +5,8 @@
 #include <cmath>
 #include "util.h"
 using namespace std;
+long double State::sum_h = 0;
+long int State::expanded = 0;
 
 list<State> State::succ(){
     list<State> succ_list;

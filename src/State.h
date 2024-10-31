@@ -20,7 +20,8 @@ class State {
         int cost;
         actions action;
         float h;
-        static int sum_h;
+        static long double sum_h;
+        static long int expanded;
         int sequence = 0;
         State(){
             this->cost = -1;
@@ -31,6 +32,8 @@ class State {
             this->action = NONE;
             this->n = init_estate.size();
             this->h = manhattan(init_estate);
+            //sum_h = sum_h + this->h;
+            //expanded++;
         };
         State(const State& other){
             this->state = other.state;
@@ -38,6 +41,8 @@ class State {
             this->action = other.action;
             this->n = other.n;
             this->h = other.h;
+            //sum_h = sum_h + this->h;
+            //expanded++;
         };
         State(vector<int> state, actions action, int cost){
             this->state = state;
@@ -45,6 +50,8 @@ class State {
             this->action = action;
             this->n = state.size();
             this->h = manhattan(state);
+            //sum_h = sum_h + this->h;
+            //expanded++;
         };
         list<State> succ();
         float idastar_f();
