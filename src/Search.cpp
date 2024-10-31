@@ -106,7 +106,7 @@ void Search::astar_search(vector<int> init_state)
         {
             this->expanded++;
             State::sum_h += current.h;
-            State::expanded++;
+            State::n_expanded++;
             sum = sum + current.cost + manhattan(current.state);
             this->closed.insert(current.state);
             if (is_goal(current.state))
@@ -139,7 +139,7 @@ void Search::astar_search(vector<int> init_state)
 void Search::idastar_search(vector<int> init_state){
     State init(init_state);
     State::sum_h += init.h;
-    State::expanded++;
+    State::n_expanded++;
     float limit = init.h;
     chrono::steady_clock::time_point begin = chrono::steady_clock::now();
     while(limit != inf){
@@ -155,7 +155,7 @@ void Search::idastar_search(vector<int> init_state){
 }
 tuple<float, State> Search::rec_search(State state, float limit){
     State::sum_h += state.h;
-    State::expanded++;
+    State::n_expanded++;
     if(state.idastar_f() > limit){
         return make_tuple(state.idastar_f(), State());
     }
@@ -272,7 +272,7 @@ void Search::clear_search(){
     this->openAstar = priority_queue<State, vector<State>, astarFunct>();
     this->openGbfs = priority_queue<State, vector<State>, gbfsFunct>();
     this->expanded = 0;
-    State::expanded = 0;
+    State::n_expanded = 0;
     State::sum_h = 0;
     return;
 }
@@ -285,11 +285,12 @@ void Search::print_search(State init_state, chrono::steady_clock::time_point beg
     time = time/100000;
     cout << fixed << setprecision(6) << time << ",";
     cout << avr << ",";
-    cout << State::sum_h/State::expanded << ",";
+    cout << State::sum_h/State::n_expanded << ",";
     cout << manhattan(init_state.state) << endl;
     return;
 }
 
+/*
 void Search::clear_search(){
     this->open.clear();
     this->closed.clear();
@@ -313,7 +314,6 @@ void Search::print_search(State init_state, chrono::steady_clock::time_point beg
     return;
 }
 
-/*
 
 void Search::start_search_15(uint64_t init_state){
 

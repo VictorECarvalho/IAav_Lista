@@ -21,7 +21,8 @@ class State {
         int cost;
         actions action;
         float h;
-        static int sum_h;
+        static long double sum_h;
+        static long int n_expanded;
         int sequence = 0;
         State(){
             this->cost = -1;
