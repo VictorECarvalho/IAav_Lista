@@ -90,6 +90,7 @@ void Search::astar_search(vector<int> init_state)
 {
     int sequence = 0;
     State initial_state(init_state);
+    
     initial_state.sequence = sequence;
     this->openAstar.push(initial_state);
     float sum = 0;
@@ -101,6 +102,8 @@ void Search::astar_search(vector<int> init_state)
         State current = this->openAstar.top();
         this->openAstar.pop();
         this->expanded++;
+        State::sum_h += current.h;
+        State::expanded++;
         //cout << "Expanding node: " << current.state[0] << current.state[1] << current.state[2] << current.state[3] << current.state[4] << current.state[5] << current.state[6] << current.state[7] << current.state[8] << ", Cost: " << current.cost << endl;
         if (this->closed.find(current.state) == this->closed.end())
         {
@@ -135,6 +138,8 @@ void Search::astar_search(vector<int> init_state)
 
 void Search::idastar_search(vector<int> init_state){
     State init(init_state);
+    State::sum_h += init.h;
+    State::expanded++;
     float limit = init.h;
     chrono::steady_clock::time_point begin = chrono::steady_clock::now();
     while(limit != inf){
