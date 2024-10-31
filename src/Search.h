@@ -26,10 +26,10 @@ struct astarFunct
 {
     bool operator()(const State& s1, const State& s2) 
     {
-        if (s1.cost + manhattan(s1.state) != s2.cost + manhattan(s2.state))
-            return (s1.cost + manhattan(s1.state)) > (s2.cost + manhattan(s2.state));
-        if (manhattan(s1.state) != manhattan(s2.state))
-            return manhattan(s1.state) > manhattan(s2.state);
+        if (s1.cost + s1.h != s2.cost + s2.h)
+            return (s1.cost + s1.h) > (s2.cost + s2.h);
+        if (s1.h != s2.h)
+            return s1.h > s2.h;
         return s1.sequence < s2.sequence;
     }
 };
@@ -38,8 +38,8 @@ struct gbfsFunct
 {
     bool operator()(const State& s1, const State& s2) 
     {
-        if (manhattan(s1.state) != manhattan(s2.state))
-            return (manhattan(s1.state)) > (manhattan(s2.state));
+        if (s1.h != s2.h)
+            return (s1.h) > (s2.h);
         if (s1.cost != s2.cost)
             return s1.cost > s2.cost;
         return s1.sequence < s2.sequence;

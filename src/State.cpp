@@ -70,6 +70,6 @@ list<State> State::succ(){
 }
 
 float State::idastar_f(){
-    return this->cost + manhattan(this->state);    
+    return this->cost + this->h; 
 }
 

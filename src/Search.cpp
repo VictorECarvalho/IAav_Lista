@@ -56,7 +56,7 @@ void Search::bfs_search(vector<int> state){
                 clear_search();
                 return;
             }
-            if (this->closed.find(next_state.state) == this->closed.end()){
+            if(this->closed.find(next_state.state) == this->closed.end()){
                     this->open.push_back(next_state);
                     this->closed.insert(next_state.state);
             }
@@ -131,7 +131,7 @@ void Search::astar_search(vector<int> init_state)
 
 void Search::idastar_search(vector<int> init_state){
     State init(init_state);
-    float limit = manhattan(init.state);
+    float limit = init.h;
     chrono::steady_clock::time_point begin = chrono::steady_clock::now();
     while(limit != inf){
         auto result = rec_search(init, limit);
