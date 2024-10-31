@@ -89,45 +89,49 @@ void Search::bfs_search(vector<int> state){
 void Search::astar_search(vector<int> init_state)
 {
     int sequence = 0;
-    State initial_state(init_state, NONE, 0);
+    State initial_state(init_state);
     initial_state.sequence = sequence;
     this->openAstar.push(initial_state);
     float sum = 0;
 
 
     chrono::steady_clock::time_point begin = chrono::steady_clock::now();
-    while (!this->openAstar.empty())
+    while(!this->openAstar.empty())
     {
         State current = this->openAstar.top();
         this->openAstar.pop();
         this->expanded++;
-        
-
-        if (is_goal(current.state))
+        //cout << "Expanding node: " << current.state[0] << current.state[1] << current.state[2] << current.state[3] << current.state[4] << current.state[5] << current.state[6] << current.state[7] << current.state[8] << ", Cost: " << current.cost << endl;
+        if (this->closed.find(current.state) == this->closed.end())
         {
-            chrono::steady_clock::time_point end = chrono::steady_clock::now();
-
+            sum = sum + current.cost + manhattan(current.state);
             this->closed.insert(current.state);
+            if (is_goal(current.state))
+            {
+                chrono::steady_clock::time_point end = chrono::steady_clock::now();
 
-            print_search(State(init_state), begin, end, current, sum/sequence);
+                this->closed.insert(current.state);
+                print_search(State(init_state), begin, end, current, sum / sequence);
 
-            this->clear_search();
-            return;
-        }
+                this->clear_search();
+                return;
+            }
+            for (State &next_state : current.succ())
+            {
+                if (next_state.h + next_state.cost < std::numeric_limits<int>::max()) 
+                {
+                    sequence++;
+                    next_state.sequence = sequence;
 
-        sum = sum + sequence;
-        this->closed.insert(current.state);
+                    //cout << "Adding node to open list: " << next_state.state[0] << next_state.state[1] << next_state.state[2] << next_state.state[3] << next_state.state[4] << next_state.state[5] << next_state.state[6] << next_state.state[7] << next_state.state[8] << ", Cost: " << next_state.cost << ", h: " << manhattan(next_state.state) << ", Sequence:" << sequence << endl;
 
-        for (State& next_state : current.succ())
-        {
-            sequence++;
-            next_state.sequence = sequence;
-            this->openAstar.push(next_state);
+                    this->openAstar.push(next_state);
+                }
+            }
         }
     }
-
-    cout << "No solution" << endl;
 }
+
 
 void Search::idastar_search(vector<int> init_state){
     State init(init_state);
