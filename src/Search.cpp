@@ -90,36 +90,40 @@ void Search::astar_search(vector<int> init_state)
 {
     int sequence = 0;
     State initial_state(init_state);
+    if(initial_state.h < inf){
+        this->openAstar.push(initial_state);
+        
+    }
     initial_state.sequence = sequence;
-    this->openAstar.push(initial_state);
-    float sum = 0;
+    State::sum_h += initial_state.h;
+    State::n_opened++;
+    //float sum = 0;
 
 
     chrono::steady_clock::time_point begin = chrono::steady_clock::now();
     while(!this->openAstar.empty())
     {
         State current = this->openAstar.top();
-        this->openAstar.pop();
-        
+        this->openAstar.pop();      
+        this->expanded++;
         //cout << "Expanding node: " << current.state[0] << current.state[1] << current.state[2] << current.state[3] << current.state[4] << current.state[5] << current.state[6] << current.state[7] << current.state[8] << ", Cost: " << current.cost << endl;
         if (this->closed.find(current.state) == this->closed.end())
         {
-            this->expanded++;
-            State::sum_h += current.h;
-            State::n_expanded++;
-            sum = sum + current.cost + manhattan(current.state);
+            //sum = sum + current.cost + current.h;
             this->closed.insert(current.state);
             if (is_goal(current.state))
             {
                 chrono::steady_clock::time_point end = chrono::steady_clock::now();
 
                 this->closed.insert(current.state);
-                print_search(State(init_state), begin, end, current, sum / sequence);
+                print_search(State(init_state), begin, end, current, 0);
 
                 this->clear_search();
                 return;
             }
-            for (State &next_state : current.succ())
+            list<State> succ = current.succ();
+            //succ.reverse();
+            for (State &next_state : succ)
             {
                 if (next_state.h + next_state.cost < std::numeric_limits<int>::max()) 
                 {
@@ -129,6 +133,8 @@ void Search::astar_search(vector<int> init_state)
                     //cout << "Adding node to open list: " << next_state.state[0] << next_state.state[1] << next_state.state[2] << next_state.state[3] << next_state.state[4] << next_state.state[5] << next_state.state[6] << next_state.state[7] << next_state.state[8] << ", Cost: " << next_state.cost << ", h: " << manhattan(next_state.state) << ", Sequence:" << sequence << endl;
 
                     this->openAstar.push(next_state);
+                    State::sum_h += next_state.h;
+                    State::n_opened++;
                 }
             }
         }
@@ -139,7 +145,7 @@ void Search::astar_search(vector<int> init_state)
 void Search::idastar_search(vector<int> init_state){
     State init(init_state);
     State::sum_h += init.h;
-    State::n_expanded++;
+    State::n_opened++;
     float limit = init.h;
     chrono::steady_clock::time_point begin = chrono::steady_clock::now();
     while(limit != inf){
@@ -155,7 +161,7 @@ void Search::idastar_search(vector<int> init_state){
 }
 tuple<float, State> Search::rec_search(State state, float limit){
     State::sum_h += state.h;
-    State::n_expanded++;
+    State::n_opened++;
     if(state.idastar_f() > limit){
         return make_tuple(state.idastar_f(), State());
     }
@@ -272,7 +278,7 @@ void Search::clear_search(){
     this->openAstar = priority_queue<State, vector<State>, astarFunct>();
     this->openGbfs = priority_queue<State, vector<State>, gbfsFunct>();
     this->expanded = 0;
-    State::n_expanded = 0;
+    State::n_opened = 0;
     State::sum_h = 0;
     return;
 }
@@ -284,8 +290,8 @@ void Search::print_search(State init_state, chrono::steady_clock::time_point beg
     double time = chrono::duration_cast<chrono::milliseconds>(end - begin).count();
     time = time/100000;
     cout << fixed << setprecision(6) << time << ",";
-    cout << avr << ",";
-    cout << State::sum_h/State::n_expanded << ",";
+    //cout << avr << ",";
+    cout << State::sum_h/State::n_opened << ",";
     cout << manhattan(init_state.state) << endl;
     return;
 }

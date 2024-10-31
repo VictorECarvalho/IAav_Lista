@@ -6,7 +6,7 @@
 #include "util.h"
 using namespace std;
 long double State::sum_h = 0;
-long int State::n_expanded = 0;
+long int State::n_opened = 0;
 
 int State::getTile(uint64_t state, int pos) const
 {
