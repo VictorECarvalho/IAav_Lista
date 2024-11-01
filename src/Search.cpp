@@ -14,19 +14,14 @@ using namespace std;
 float inf = numeric_limits<float>::infinity();
 void Search::start_search(vector<int> init_state){
     if (this->algorithm == "-bfs") {
-        cout << "-bfs" << endl;
         bfs_search(init_state);
     } else if (this->algorithm == "-idfs") {
-        cout << "-idfs" << endl;
         idfs_search(init_state);
     } else if (this->algorithm == "-astar") {
-        cout << "-astar" << endl;
         astar_search(init_state);
     } else if (this->algorithm == "-idastar") {
-        cout << "-idastar" << endl;
         idastar_search(init_state);
     } else if (this->algorithm == "-gbfs") {
-        cout << "-gbfs" << endl;
         gbfs_search(init_state);
     } 
     return;
@@ -293,7 +288,10 @@ void Search::print_search(State init_state, chrono::steady_clock::time_point beg
     time = time/100000;
     cout << fixed << setprecision(6) << time << ",";
     //cout << avr << ",";
-    cout << State::sum_h/State::n_opened << ",";
+    if(State::n_opened != 0 && State::sum_h != 0)
+        cout << State::sum_h/State::n_opened << ",";
+    else
+        cout << 0 << ",";
     cout << manhattan(init_state.state) << endl;
     return;
 }

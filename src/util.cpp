@@ -6,6 +6,7 @@
 #include <vector>
 #include <cmath>
 #include "util.h"
+
 using namespace std;
 
 vector<vector<int>> parse(int n, char *s[])
