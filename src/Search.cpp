@@ -343,8 +343,8 @@ void Search::astar_search_15(uint64_t init_state)
         State15 current = this->openAstar_15.top();
         //unpack15Puzzle(current.state);
         this->openAstar_15.pop();
-        cout << "current" << endl;
-        unpack15Puzzle(current.state);
+        //cout << "current" << endl;
+        //unpack15Puzzle(current.state);
         //cout << "Expanding node: " << current.state[0] << current.state[1] << current.state[2] << current.state[3] << current.state[4] << current.state[5] << current.state[6] << current.state[7] << current.state[8] << ", Cost: " << current.cost << endl;
         if (this->closed_15.find(current.state) == this->closed_15.end())
         {
@@ -367,12 +367,12 @@ void Search::astar_search_15(uint64_t init_state)
                 {
                     sequence++;
                     next_state.sequence = sequence;
-
                     
                     //cout << "Adding node to open list: " << next_state.state[0] << next_state.state[1] << next_state.state[2] << next_state.state[3] << next_state.state[4] << next_state.state[5] << next_state.state[6] << next_state.state[7] << next_state.state[8] << ", Cost: " << next_state.cost << ", h: " << manhattan(next_state.state) << ", Sequence:" << sequence << endl;
                     
-                    cout << "succ" << endl;
-                    unpack15Puzzle(next_state.state);
+                    //cout << "succ" << endl;
+                    //unpack15Puzzle(next_state.state);
+                    //cout << "Heuristic + Cost:" << manhattan_15(next_state.state) + next_state.cost << endl;
                     
                     this->openAstar_15.push(next_state);
                 }
