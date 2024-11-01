@@ -66,14 +66,7 @@ bool is_goal(vector<int> state){
 }
 
 bool is_goal_15(uint64_t state) {
-
-    for (int i = 0; i < 16; ++i) {
-        int tile = (state >> (4 * (15 - i))) & 0xF;
-        if (tile != i) {
-            return false; 
-        }
-    }
-    return true;
+    return state == 18364758544493064720;
 }
 
 
@@ -90,6 +83,16 @@ std::vector<int> unpack15Puzzle(uint64_t packedNumber)
     std::vector<int> puzzle(16);
     for (size_t i = 0; i < 16; i++)
         puzzle[i] = (packedNumber >> (i * 4)) & 0xF;
+
+    std::cout << "Unpacked puzzle: [";
+    for (size_t i = 0; i < puzzle.size(); ++i) {
+        std::cout << puzzle[i];
+        if (i < puzzle.size() - 1) {
+            std::cout << ", ";
+        }
+    }
+    std::cout << "]" << std::endl;
+
     return puzzle;
 }
 
@@ -100,6 +103,9 @@ int getTile(uint64_t state, int pos) {
 int manhattan_15(uint64_t packed_state) {
     int distance = 0;
     int n = 4; 
+
+    if(is_goal_15(packed_state))
+        return distance;
 
     int current_col, current_row, goal_row, goal_col;
 

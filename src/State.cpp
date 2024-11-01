@@ -8,12 +8,12 @@ using namespace std;
 long double State::sum_h = 0;
 long int State::n_opened = 0;
 
-int State::getTile(uint64_t state, int pos) const
+int State15::getTile(uint64_t state, int pos) const
 {
     return (state >> (pos * 4)) & 0xF; 
 }
 
-uint64_t State::setTile(uint64_t state, int pos, int value) const
+uint64_t State15::setTile(uint64_t state, int pos, int value) const
 {
     state &= ~(0xFULL << (pos * 4));              
     state |= (uint64_t(value & 0xF) << (pos * 4)); 
@@ -87,16 +87,17 @@ float State::idastar_f(){
     return this->cost + this->h; 
 }
 
-std::list<State> State::succ_15()
+std::list<State15> State15::succ_15()
 {
-    std::list<State> succ_list;
+    std::list<State15> succ_list;
     int zero_pos = -1;
-    int d = std::sqrt(this->n);
-    for (int i = 0; i < 16; ++i)
+    int d = 4;
+    for (int i = 0; i < 16; i++)
     {
-        if (getTile(this->packed_state, i) == 0)
+        if (getTile(this->state, i) == 0)
         {
             zero_pos = i;
+            //cout << "zeroposition" << i << endl;
             break;
         }
     }
@@ -105,7 +106,7 @@ std::list<State> State::succ_15()
     {
         if (zero_pos / d >= 1)
         {
-            uint64_t new_packed_state = this->packed_state;
+            uint64_t new_packed_state = this->state;
             int above_pos = zero_pos - d;
             int above_tile = getTile(new_packed_state, above_pos);
             new_packed_state = setTile(new_packed_state, zero_pos, above_tile);
@@ -117,7 +118,7 @@ std::list<State> State::succ_15()
     {
         if (zero_pos % d != 0)
         {
-            uint64_t new_packed_state = this->packed_state;
+            uint64_t new_packed_state = this->state;
             int left_pos = zero_pos - 1;
             int left_tile = getTile(new_packed_state, left_pos);
             new_packed_state = setTile(new_packed_state, zero_pos, left_tile);
@@ -129,7 +130,7 @@ std::list<State> State::succ_15()
     {
         if (zero_pos % d != (d - 1))
         {
-            uint64_t new_packed_state = this->packed_state;
+            uint64_t new_packed_state = this->state;
             int right_pos = zero_pos + 1;
             int right_tile = getTile(new_packed_state, right_pos);
             new_packed_state = setTile(new_packed_state, zero_pos, right_tile);
@@ -141,7 +142,7 @@ std::list<State> State::succ_15()
     {
         if (zero_pos / d < (d - 1))
         {
-            uint64_t new_packed_state = this->packed_state;
+            uint64_t new_packed_state = this->state;
             int below_pos = zero_pos + d;
             int below_tile = getTile(new_packed_state, below_pos);
             new_packed_state = setTile(new_packed_state, zero_pos, below_tile);

@@ -61,3 +61,37 @@ class State {
         int getTile(uint64_t state, int pos) const;
         uint64_t setTile(uint64_t state, int pos, int value) const;
 };
+
+class State15 {
+    public:     
+        uint64_t state;
+        int n;
+        int cost;
+        actions action;
+        static long double sum_h;
+        static long int n_opened;
+        int sequence = 0;
+        State15(){
+            this->cost = -1;
+        };
+        State15(uint64_t init_estate){
+            this->state = init_estate;
+            this->cost = 0;
+            this->action = NONE;
+        };
+        State15(const State15& other){
+            this->state = other.state;
+            this->cost = other.cost;
+            this->action = other.action;
+        };
+        State15(uint64_t state, actions action, int cost)
+        {
+            this->state = state;
+            this->action = action;
+            this->cost = cost;
+        };
+        list<State15> succ_15();
+        float idastar_f();
+        int getTile(uint64_t state, int pos) const;
+        uint64_t setTile(uint64_t state, int pos, int value) const;
+};
