@@ -23,6 +23,7 @@ class State {
         float h;
         static long double sum_h;
         static long int n_opened;
+        static long int id;
         int sequence = 0;
         State(){
             this->cost = -1;
@@ -33,6 +34,8 @@ class State {
             this->action = NONE;
             this->n = init_estate.size();
             this->h = manhattan(init_estate);
+            this->sequence = id;
+            id++;
         };
         State(const State& other){
             this->state = other.state;
@@ -40,6 +43,7 @@ class State {
             this->action = other.action;
             this->n = other.n;
             this->h = other.h;
+            this->sequence = other.sequence;
         };
         State(vector<int> state, actions action, int cost)
         {
@@ -48,6 +52,8 @@ class State {
             this->action = action;
             this->n = state.size();
             this->h = manhattan(state);
+            this->sequence = id;
+            id++;
         };
         State(uint64_t packed_state, actions action, int cost)
         {

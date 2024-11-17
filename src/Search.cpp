@@ -23,7 +23,22 @@ void Search::start_search(vector<int> init_state){
         idastar_search(init_state);
     } else if (this->algorithm == "-gbfs") {
         gbfs_search(init_state);
-    } 
+    } else if (this->algorithm == "-tst") {
+        vector<int> state1 = {1,0,2,3,4,5,6,7,8};
+        vector<int> state2 = {3,1,2,0,4,5,6,7,8};
+        vector<int> state3 = {0,1,2,3,4,5,6,7,8};
+        this->openAstar.push(State(state2));
+        this->openAstar.push(State(state1));
+        this->openAstar.push(State(state3));
+        State current = this->openAstar.top();
+        this->openAstar.pop();
+        current = this->openAstar.top();
+        for(auto i : current.state){
+            cout << i << " ";
+        }
+        cout << endl;
+
+    }
     return;
 }
 void Search::bfs_search(vector<int> state){
@@ -83,13 +98,11 @@ void Search::bfs_search(vector<int> state){
 
 void Search::astar_search(vector<int> init_state)
 {
-    int sequence = 0;
     State initial_state(init_state);
     if(initial_state.h < inf){
         this->openAstar.push(initial_state);
         
     }
-    initial_state.sequence = sequence;
     State::sum_h += initial_state.h;
     State::n_opened++;
     //float sum = 0;
@@ -100,7 +113,6 @@ void Search::astar_search(vector<int> init_state)
     {
         State current = this->openAstar.top();
         this->openAstar.pop();      
-        this->expanded++;
         //cout << "Expanding node: " << current.state[0] << current.state[1] << current.state[2] << current.state[3] << current.state[4] << current.state[5] << current.state[6] << current.state[7] << current.state[8] << ", Cost: " << current.cost << endl;
         if (this->closed.find(current.state) == this->closed.end())
         {
@@ -117,14 +129,12 @@ void Search::astar_search(vector<int> init_state)
                 return;
             }
             list<State> succ = current.succ();
+            this->expanded++;
             //succ.reverse();
             for (State &next_state : succ)
             {
                 if (next_state.h + next_state.cost < std::numeric_limits<int>::max()) 
                 {
-                    sequence++;
-                    next_state.sequence = sequence;
-
                     //cout << "Adding node to open list: " << next_state.state[0] << next_state.state[1] << next_state.state[2] << next_state.state[3] << next_state.state[4] << next_state.state[5] << next_state.state[6] << next_state.state[7] << next_state.state[8] << ", Cost: " << next_state.cost << ", h: " << manhattan(next_state.state) << ", Sequence:" << sequence << endl;
 
                     this->openAstar.push(next_state);
