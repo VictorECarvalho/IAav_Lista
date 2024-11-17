@@ -5,6 +5,9 @@
 #include <cmath>
 #include "util.h"
 using namespace std;
+long double State::sum_h = 0;
+long int State::n_opened = 0;
+long int State::id = 0;
 long double State15::sum_h = 0;
 long int State15::n_opened = 0;
 long int State15::id = 0;
@@ -84,7 +87,6 @@ std::list<State15> State15::succ_15()
         if (getTile(this->state, i) == 0)
         {
             zero_pos = i;
-            //cout << "zeroposition" << i << endl;
             break;
         }
     }
