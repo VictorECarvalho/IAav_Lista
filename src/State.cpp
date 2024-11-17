@@ -5,9 +5,6 @@
 #include <cmath>
 #include "util.h"
 using namespace std;
-long double State::sum_h = 0;
-long int State::n_opened = 0;
-long int State::id = 0;
 long double State15::sum_h = 0;
 long int State15::n_opened = 0;
 long int State15::id = 0;
@@ -70,20 +67,6 @@ list<State> State::succ(){
             succ_list.push_back(new_state);
         }
     } 
-   /*
-    cout << "state in: "<<"i: " << i<< " d: "<< d << endl;
-    for(auto i : this->state){
-        cout << i << " ";
-    }
-   cout << "\nsucc_list" << endl;
-    for(auto i : succ_list){
-        for(auto j : i.state){
-            cout << j << " ";
-        }
-        cout << "cost: " << i.action << " ";
-       cout << endl;
-    }
-   cout << "end succ_list" << endl; //*/
     return succ_list;
 }
 

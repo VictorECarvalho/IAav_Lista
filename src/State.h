@@ -15,15 +15,15 @@ enum actions{
 
 class State {
     public:     
+        static long double sum_h;
+        static long int n_opened;
+        static long int id;
         vector<int> state;
         uint64_t packed_state;
         int n;
         int cost;
         actions action;
         float h;
-        static long double sum_h;
-        static long int n_opened;
-        static long int id;
         int sequence = 0;
         State(){
             this->cost = -1;

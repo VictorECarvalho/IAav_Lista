@@ -23,21 +23,6 @@ void Search::start_search(vector<int> init_state){
         idastar_search(init_state);
     } else if (this->algorithm == "-gbfs") {
         gbfs_search(init_state);
-    } else if (this->algorithm == "-tst") {
-        vector<int> state1 = {1,0,2,3,4,5,6,7,8};
-        vector<int> state2 = {3,1,2,0,4,5,6,7,8};
-        vector<int> state3 = {0,1,2,3,4,5,6,7,8};
-        this->openAstar.push(State(state2));
-        this->openAstar.push(State(state1));
-        this->openAstar.push(State(state3));
-        State current = this->openAstar.top();
-        this->openAstar.pop();
-        current = this->openAstar.top();
-        for(auto i : current.state){
-            cout << i << " ";
-        }
-        cout << endl;
-
     }
     return;
 }
@@ -50,7 +35,6 @@ void Search::bfs_search(vector<int> state){
         clear_search();
         return;
     }
-    int w =0;
     this->open.push_back(init_state);
     while(!open.empty()){
         this->expanded++;
@@ -71,27 +55,6 @@ void Search::bfs_search(vector<int> state){
                     this->closed.insert(next_state.state);
             }
         }
-        /*
-        if(w < 10){
-            w++;
-            //w = 0;
-        }
-        cout << "opened" << endl;
-            cout << "state: ";
-        for(auto i : opened.state){
-            cout << i << " ";
-            
-        }
-            cout << endl;
-        cout << "open" << endl;
-        for(auto i : open){
-            cout << "state: " << i.action << "- ";
-            for(auto j : i.state){
-                cout << j << " ";
-            }
-            cout << endl;
-        }
-        //*/
     }
     return;
 }
@@ -113,7 +76,6 @@ void Search::astar_search(vector<int> init_state)
     {
         State current = this->openAstar.top();
         this->openAstar.pop();      
-        //cout << "Expanding node: " << current.state[0] << current.state[1] << current.state[2] << current.state[3] << current.state[4] << current.state[5] << current.state[6] << current.state[7] << current.state[8] << ", Cost: " << current.cost << endl;
         if (this->closed.find(current.state) == this->closed.end())
         {
             //sum = sum + current.cost + current.h;
@@ -130,13 +92,11 @@ void Search::astar_search(vector<int> init_state)
             }
             list<State> succ = current.succ();
             this->expanded++;
-            //succ.reverse();
             for (State &next_state : succ)
             {
                 if (next_state.h + next_state.cost < std::numeric_limits<int>::max()) 
                 {
-                    //cout << "Adding node to open list: " << next_state.state[0] << next_state.state[1] << next_state.state[2] << next_state.state[3] << next_state.state[4] << next_state.state[5] << next_state.state[6] << next_state.state[7] << next_state.state[8] << ", Cost: " << next_state.cost << ", h: " << manhattan(next_state.state) << ", Sequence:" << sequence << endl;
-
+                
                     this->openAstar.push(next_state);
                     State::sum_h += next_state.h;
                     State::n_opened++;
@@ -199,7 +159,6 @@ void Search::gbfs_search(vector<int> init_state)
     }
     State::sum_h += initial_state.h;
     State::n_opened++;
-    //float sum = 0;
 
 
     chrono::steady_clock::time_point begin = chrono::steady_clock::now();
@@ -207,10 +166,8 @@ void Search::gbfs_search(vector<int> init_state)
     {
         State current = this->openGbfs.top();
         this->openGbfs.pop();      
-        //cout << "Expanding node: " << current.state[0] << current.state[1] << current.state[2] << current.state[3] << current.state[4] << current.state[5] << current.state[6] << current.state[7] << current.state[8] << ", Cost: " << current.cost << endl;
         if (this->closed.find(current.state) == this->closed.end())
         {
-            //sum = sum + current.cost + current.h;
             this->closed.insert(current.state);
             if (is_goal(current.state))
             {
@@ -224,13 +181,11 @@ void Search::gbfs_search(vector<int> init_state)
             }
             list<State> succ = current.succ();
             this->expanded++;
-            //succ.reverse();
             for (State &next_state : succ)
             {
                 if (next_state.h + next_state.cost < std::numeric_limits<int>::max()) 
                 {
-                    //cout << "Adding node to open list: " << next_state.state[0] << next_state.state[1] << next_state.state[2] << next_state.state[3] << next_state.state[4] << next_state.state[5] << next_state.state[6] << next_state.state[7] << next_state.state[8] << ", Cost: " << next_state.cost << ", h: " << manhattan(next_state.state) << ", Sequence:" << sequence << endl;
-
+             
                     this->openGbfs.push(next_state);
                     State::sum_h += next_state.h;
                     State::n_opened++;
@@ -289,19 +244,17 @@ void Search::clear_search(){
     this->expanded = 0;
     State::n_opened = 0;
     State::sum_h = 0;
+    State::id = 0;
     this->openAstar_15 = priority_queue<State15, vector<State15>, astarFunct_15>();
     this->closed_15.clear();
     return;
 }
 void Search::print_search(State init_state, chrono::steady_clock::time_point begin, chrono::steady_clock::time_point end, State final_state,float avr){
-    //expanded nodes
-    //cout <<  this->closed.size() << ",";
     cout << this->expanded << ",";
     cout << final_state.cost << ",";
     double time = chrono::duration_cast<chrono::nanoseconds>(end - begin).count();
     time = time/100000000;
     cout << fixed << setprecision(9) << time << ",";
-    //cout << avr << ",";
     if(State::n_opened != 0 && State::sum_h != 0)
         cout << State::sum_h/State::n_opened << ",";
     else
@@ -323,8 +276,6 @@ void Search::start_search_15(uint64_t init_state){
 
 
 void Search::print_search_15(State15 init_state, chrono::steady_clock::time_point begin, chrono::steady_clock::time_point end, State15 final_state,float avr){
-    //expanded nodes
-    //cout <<  this->closed.size() << ",";
     cout << this->expanded << ",";
     cout << final_state.cost << ",";
     double time = chrono::duration_cast<chrono::nanoseconds>(end - begin).count();
@@ -348,18 +299,14 @@ void Search::astar_search_15(uint64_t init_state)
     }
     State15::sum_h += initial_state.h;
     State15::n_opened++;
-    //float sum = 0;
-
 
     chrono::steady_clock::time_point begin = chrono::steady_clock::now();
     while(!this->openAstar_15.empty())
     {
         State15 current = this->openAstar_15.top();
         this->openAstar_15.pop();      
-        //cout << "Expanding node: " << current.state[0] << current.state[1] << current.state[2] << current.state[3] << current.state[4] << current.state[5] << current.state[6] << current.state[7] << current.state[8] << ", Cost: " << current.cost << endl;
         if (this->closed_15.find(current.state) == this->closed_15.end())
         {
-            //sum = sum + current.cost + current.h;
             this->closed_15.insert(current.state);
             if (is_goal_15(current.state))
             {
@@ -373,13 +320,10 @@ void Search::astar_search_15(uint64_t init_state)
             }
             list<State15> succ = current.succ_15();
             this->expanded++;
-            //succ.reverse();
             for (State15 &next_state : succ)
             {
                 if (next_state.h + next_state.cost < std::numeric_limits<int>::max()) 
                 {
-                    //cout << "Adding node to open list: " << next_state.state[0] << next_state.state[1] << next_state.state[2] << next_state.state[3] << next_state.state[4] << next_state.state[5] << next_state.state[6] << next_state.state[7] << next_state.state[8] << ", Cost: " << next_state.cost << ", h: " << manhattan(next_state.state) << ", Sequence:" << sequence << endl;
-
                     this->openAstar_15.push(next_state);
                     State15::sum_h += next_state.h;
                     State15::n_opened++;
