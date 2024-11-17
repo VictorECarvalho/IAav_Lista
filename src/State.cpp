@@ -8,6 +8,9 @@ using namespace std;
 long double State::sum_h = 0;
 long int State::n_opened = 0;
 long int State::id = 0;
+long double State15::sum_h = 0;
+long int State15::n_opened = 0;
+long int State15::id = 0;
 
 int State15::getTile(uint64_t state, int pos) const
 {

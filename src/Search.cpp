@@ -192,44 +192,48 @@ tuple<float, State> Search::rec_search(State state, float limit){
 
 void Search::gbfs_search(vector<int> init_state)
 {
-    int sequence = 0;
     State initial_state(init_state);
-    initial_state.sequence = sequence;
-    this->openGbfs.push(initial_state);
-    float sum = 0;
+    if(initial_state.h < inf){
+        this->openGbfs.push(initial_state);
+        
+    }
+    State::sum_h += initial_state.h;
+    State::n_opened++;
+    //float sum = 0;
 
 
     chrono::steady_clock::time_point begin = chrono::steady_clock::now();
     while(!this->openGbfs.empty())
     {
         State current = this->openGbfs.top();
-        this->openGbfs.pop();
-        this->expanded++;
+        this->openGbfs.pop();      
         //cout << "Expanding node: " << current.state[0] << current.state[1] << current.state[2] << current.state[3] << current.state[4] << current.state[5] << current.state[6] << current.state[7] << current.state[8] << ", Cost: " << current.cost << endl;
         if (this->closed.find(current.state) == this->closed.end())
         {
-            sum = sum + current.cost + current.h;
+            //sum = sum + current.cost + current.h;
             this->closed.insert(current.state);
             if (is_goal(current.state))
             {
                 chrono::steady_clock::time_point end = chrono::steady_clock::now();
 
                 this->closed.insert(current.state);
-                print_search(State(init_state), begin, end, current, sum / sequence);
+                print_search(State(init_state), begin, end, current, 0);
 
                 this->clear_search();
                 return;
             }
-            for (State &next_state : current.succ())
+            list<State> succ = current.succ();
+            this->expanded++;
+            //succ.reverse();
+            for (State &next_state : succ)
             {
                 if (next_state.h + next_state.cost < std::numeric_limits<int>::max()) 
                 {
-                    sequence++;
-                    next_state.sequence = sequence;
-
                     //cout << "Adding node to open list: " << next_state.state[0] << next_state.state[1] << next_state.state[2] << next_state.state[3] << next_state.state[4] << next_state.state[5] << next_state.state[6] << next_state.state[7] << next_state.state[8] << ", Cost: " << next_state.cost << ", h: " << manhattan(next_state.state) << ", Sequence:" << sequence << endl;
 
                     this->openGbfs.push(next_state);
+                    State::sum_h += next_state.h;
+                    State::n_opened++;
                 }
             }
         }
@@ -294,9 +298,9 @@ void Search::print_search(State init_state, chrono::steady_clock::time_point beg
     //cout <<  this->closed.size() << ",";
     cout << this->expanded << ",";
     cout << final_state.cost << ",";
-    double time = chrono::duration_cast<chrono::milliseconds>(end - begin).count();
-    time = time/100000;
-    cout << fixed << setprecision(6) << time << ",";
+    double time = chrono::duration_cast<chrono::nanoseconds>(end - begin).count();
+    time = time/100000000;
+    cout << fixed << setprecision(9) << time << ",";
     //cout << avr << ",";
     if(State::n_opened != 0 && State::sum_h != 0)
         cout << State::sum_h/State::n_opened << ",";
@@ -323,10 +327,13 @@ void Search::print_search_15(State15 init_state, chrono::steady_clock::time_poin
     //cout <<  this->closed.size() << ",";
     cout << this->expanded << ",";
     cout << final_state.cost << ",";
-    double time = chrono::duration_cast<chrono::microseconds>(end - begin).count();
-    time = time/1000000;
-    cout << fixed << setprecision(6) << time << ",";
-    cout << avr << ",";
+    double time = chrono::duration_cast<chrono::nanoseconds>(end - begin).count();
+    time = time/1000000000;
+    cout << fixed << setprecision(9) << time << ",";
+    if(State15::n_opened != 0 && State15::sum_h != 0)
+        cout << State15::sum_h/State15::n_opened << ",";
+    else
+        cout << 0 << ",";
     cout << manhattan_15(init_state.state) << endl;
     return;
 }
@@ -334,58 +341,50 @@ void Search::print_search_15(State15 init_state, chrono::steady_clock::time_poin
 
 void Search::astar_search_15(uint64_t init_state)
 {
-    int sequence = 0;
-    State15 initial_state(init_state, NONE, 0);
-    initial_state.sequence = sequence;
-    this->openAstar_15.push(initial_state);
-    float sum = 0;
-
-    State15 current2 = this->openAstar_15.top();
-
-    //unpack15Puzzle(current2.state);
+    State15 initial_state(init_state);
+    if(initial_state.h < inf){
+        this->openAstar_15.push(initial_state);
+        
+    }
+    State15::sum_h += initial_state.h;
+    State15::n_opened++;
+    //float sum = 0;
 
 
     chrono::steady_clock::time_point begin = chrono::steady_clock::now();
     while(!this->openAstar_15.empty())
     {
         State15 current = this->openAstar_15.top();
-        //unpack15Puzzle(current.state);
-        this->openAstar_15.pop();
-        //cout << "current" << endl;
-        //unpack15Puzzle(current.state);
+        this->openAstar_15.pop();      
         //cout << "Expanding node: " << current.state[0] << current.state[1] << current.state[2] << current.state[3] << current.state[4] << current.state[5] << current.state[6] << current.state[7] << current.state[8] << ", Cost: " << current.cost << endl;
         if (this->closed_15.find(current.state) == this->closed_15.end())
         {
-            this->expanded++;
-            sum = sum + current.cost + manhattan_15(current.state);
+            //sum = sum + current.cost + current.h;
             this->closed_15.insert(current.state);
             if (is_goal_15(current.state))
             {
                 chrono::steady_clock::time_point end = chrono::steady_clock::now();
 
                 this->closed_15.insert(current.state);
-                print_search_15(State15(init_state,NONE,0), begin, end, current, sum / sequence);
+                print_search_15(State15(init_state), begin, end, current, 0);
 
                 this->clear_search();
                 return;
             }
-            for (State15 &next_state : current.succ_15())
+            list<State15> succ = current.succ_15();
+            this->expanded++;
+            //succ.reverse();
+            for (State15 &next_state : succ)
             {
-                if (manhattan_15(current.state) + next_state.cost < std::numeric_limits<int>::max()) 
+                if (next_state.h + next_state.cost < std::numeric_limits<int>::max()) 
                 {
-                    sequence++;
-                    next_state.sequence = sequence;
-                    
                     //cout << "Adding node to open list: " << next_state.state[0] << next_state.state[1] << next_state.state[2] << next_state.state[3] << next_state.state[4] << next_state.state[5] << next_state.state[6] << next_state.state[7] << next_state.state[8] << ", Cost: " << next_state.cost << ", h: " << manhattan(next_state.state) << ", Sequence:" << sequence << endl;
-                    
-                    //cout << "succ" << endl;
-                    //unpack15Puzzle(next_state.state);
-                    //cout << "Heuristic + Cost:" << manhattan_15(next_state.state) + next_state.cost << endl;
-                    
+
                     this->openAstar_15.push(next_state);
+                    State15::sum_h += next_state.h;
+                    State15::n_opened++;
                 }
             }
         }
     }
-    this->clear_search();
 }

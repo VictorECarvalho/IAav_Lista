@@ -18,13 +18,7 @@ int main(int argc, char* argv[])
     if (init_estates[0].size() == 16)
     {
         for (size_t i = 0; i < init_estates.size(); i++)
-        {
-            unpack15Puzzle(pack15Puzzle(init_estates[i]));
             search.start_search_15(pack15Puzzle(init_estates[i]));
-            cout << is_goal_15(pack15Puzzle(init_estates[i])) << endl;
-            cout << manhattan_15(pack15Puzzle(init_estates[i])) << endl;
-            
-        }
         return 0;
     }
 

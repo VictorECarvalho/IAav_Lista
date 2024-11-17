@@ -45,10 +45,10 @@ struct astarFunct_15
 {
     bool operator()(const State15& s1, const State15& s2) 
     {
-        if (s1.cost + manhattan_15(s1.state) != s2.cost + manhattan_15(s2.state))
-            return (s1.cost + manhattan_15(s1.state)) > (s2.cost + manhattan_15(s2.state));
-        if (manhattan_15(s1.state) != manhattan_15(s2.state))
-            return manhattan_15(s1.state) > manhattan_15(s2.state);
+        if (s1.cost + s1.h != s2.cost + s2.h)
+            return (s1.cost + s1.h) > (s2.cost + s2.h);
+        else if (s1.h != s2.h)
+            return s1.h > s2.h;
         return s1.sequence > s2.sequence;
     }
 };

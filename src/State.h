@@ -76,25 +76,36 @@ class State15 {
         actions action;
         static long double sum_h;
         static long int n_opened;
+        static long int id;
         int sequence = 0;
+        float h;
         State15(){
             this->cost = -1;
         };
         State15(uint64_t init_estate){
+            this->h = manhattan_15(state);
             this->state = init_estate;
             this->cost = 0;
             this->action = NONE;
+            this->sequence = id;
+            id++;
         };
         State15(const State15& other){
             this->state = other.state;
             this->cost = other.cost;
             this->action = other.action;
+            this->n = other.n;
+            this->h = other.h;
+            this->sequence = other.sequence;
         };
         State15(uint64_t state, actions action, int cost)
         {
+            this->h = manhattan_15(state);
             this->state = state;
             this->action = action;
             this->cost = cost;
+            this->sequence = id;
+            id++;
         };
         list<State15> succ_15();
         float idastar_f();
