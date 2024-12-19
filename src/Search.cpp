@@ -245,6 +245,9 @@ void Search::clear_search(){
     State::n_opened = 0;
     State::sum_h = 0;
     State::id = 0;
+    State15::n_opened = 0;
+    State15::sum_h = 0;
+    State15::id = 0;
     this->openAstar_15 = priority_queue<State15, vector<State15>, astarFunct_15>();
     this->closed_15.clear();
     return;
@@ -267,7 +270,6 @@ void Search::print_search(State init_state, chrono::steady_clock::time_point beg
 void Search::start_search_15(uint64_t init_state){
 
     if (this->algorithm == "-astar") {
-        cout << "-astar" << endl;
         astar_search_15(init_state);
     }
 
@@ -299,6 +301,8 @@ void Search::astar_search_15(uint64_t init_state)
     }
     State15::sum_h += initial_state.h;
     State15::n_opened++;
+    //float sum = 0;
+
 
     chrono::steady_clock::time_point begin = chrono::steady_clock::now();
     while(!this->openAstar_15.empty())
@@ -307,6 +311,7 @@ void Search::astar_search_15(uint64_t init_state)
         this->openAstar_15.pop();      
         if (this->closed_15.find(current.state) == this->closed_15.end())
         {
+            //sum = sum + current.cost + current.h;
             this->closed_15.insert(current.state);
             if (is_goal_15(current.state))
             {
@@ -324,6 +329,7 @@ void Search::astar_search_15(uint64_t init_state)
             {
                 if (next_state.h + next_state.cost < std::numeric_limits<int>::max()) 
                 {
+                
                     this->openAstar_15.push(next_state);
                     State15::sum_h += next_state.h;
                     State15::n_opened++;
@@ -331,4 +337,5 @@ void Search::astar_search_15(uint64_t init_state)
             }
         }
     }
+    
 }

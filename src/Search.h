@@ -49,7 +49,7 @@ struct astarFunct_15
             return (s1.cost + s1.h) > (s2.cost + s2.h);
         else if (s1.h != s2.h)
             return s1.h > s2.h;
-        return s1.sequence > s2.sequence;
+        return s1.sequence < s2.sequence;
     }
 };
 
