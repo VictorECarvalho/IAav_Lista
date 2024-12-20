@@ -83,7 +83,7 @@ class State15 {
             this->cost = -1;
         };
         State15(uint64_t init_estate){
-            this->h = manhattan_15(state);
+            this->h = manhattan_15(init_estate);
             this->state = init_estate;
             this->cost = 0;
             this->action = NONE;

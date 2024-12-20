@@ -303,12 +303,12 @@ void Search::astar_search_15(uint64_t init_state)
     State15::n_opened++;
     //float sum = 0;
 
-
     chrono::steady_clock::time_point begin = chrono::steady_clock::now();
     while(!this->openAstar_15.empty())
     {
         State15 current = this->openAstar_15.top();
-        this->openAstar_15.pop();      
+        this->openAstar_15.pop();             
+         
         if (this->closed_15.find(current.state) == this->closed_15.end())
         {
             //sum = sum + current.cost + current.h;

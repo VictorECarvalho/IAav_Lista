@@ -84,7 +84,7 @@ std::vector<int> unpack15Puzzle(uint64_t packedNumber)
     std::vector<int> puzzle(16);
     for (size_t i = 0; i < 16; i++)
         puzzle[i] = (packedNumber >> (i * 4)) & 0xF;
-
+    /*
     std::cout << "Unpacked puzzle: [";
     for (size_t i = 0; i < puzzle.size(); ++i) {
         std::cout << puzzle[i];
@@ -93,6 +93,7 @@ std::vector<int> unpack15Puzzle(uint64_t packedNumber)
         }
     }
     std::cout << "]" << std::endl;
+    */
 
     return puzzle;
 }
