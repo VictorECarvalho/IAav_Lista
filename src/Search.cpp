@@ -24,6 +24,7 @@ void Search::start_search(vector<int> init_state){
     } else if (this->algorithm == "-gbfs") {
         gbfs_search(init_state);
     }
+    this->clear_search(); 
     return;
 }
 void Search::bfs_search(vector<int> state){
