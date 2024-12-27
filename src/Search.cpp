@@ -56,6 +56,7 @@ void Search::bfs_search(vector<int> state){
             }
         }
     }
+    cout << "-,-,-,-,-" << endl;
     return;
 }
 
@@ -104,6 +105,8 @@ void Search::astar_search(vector<int> init_state)
             }
         }
     }
+    cout << "-,-,-,-,-" << endl;
+    return;
 }
 
 
@@ -123,6 +126,8 @@ void Search::idastar_search(vector<int> init_state){
             return;
         }
     }
+    cout << "-,-,-,-,-" << endl;
+    return;
 }
 tuple<float, State> Search::rec_search(State state, float limit){
     State::sum_h += state.h;
@@ -193,6 +198,8 @@ void Search::gbfs_search(vector<int> init_state)
             }
         }
     }
+    cout << "-,-,-,-,-" << endl;
+    return;
 }
 
 void Search::idfs_search(vector<int> init_state){
@@ -209,6 +216,7 @@ void Search::idfs_search(vector<int> init_state){
         }
         limit++;
     }
+    cout << "-,-,-,-,-" << endl;
     return;
 }
 State Search::depth_limit_search(State init_state, int limit){
@@ -304,7 +312,8 @@ void Search::astar_search_15(uint64_t init_state)
     //float sum = 0;
 
     chrono::steady_clock::time_point begin = chrono::steady_clock::now();
-    while(!this->openAstar_15.empty())
+    double time_passed = 0;
+    while(!this->openAstar_15.empty() && time_passed < 30)
     {
         State15 current = this->openAstar_15.top();
         this->openAstar_15.pop();             
@@ -336,6 +345,10 @@ void Search::astar_search_15(uint64_t init_state)
                 }
             }
         }
+        time_passed = chrono::duration_cast<chrono::nanoseconds>(chrono::steady_clock::now() - begin).count();
+        time_passed = time_passed/1000000000;
     }
-    
+    cout << "-,-,-,-,-" << endl;
+    this->clear_search(); 
+    return;
 }
